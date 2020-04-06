@@ -1,7 +1,7 @@
 AT&T汇编笔记
 ============
 
-笔记目的：捋一遍以当复习，备速查。
+笔记目的：学习中顺便捋一遍，备速查。
 
 第8章 基本数学功能
 ------------------
@@ -79,13 +79,51 @@ i表integer；
 
 r是根据st[0]的位置定的;
 
-```
-#1.初始化fpu堆栈
-	finit
-#2.fld 压栈
-	flds value1 加载单精度浮点数value1到st[0]
-#3.fst获取栈顶
-#4.加减乘除	
+```sql
+#1.传送浮点值
+	压栈根据数据类型和字节数，获取值根据数据类型和字节数
+	s：4bytes	l：8bytes
+	对fpu栈不用标定长度
+#1.1 传入浮点值
+/*
+	fld source
+	source可以是32位、64位和80位内存位置
+	i：整数
+	s：4个字节
+	l：8个字节
+*/
+	flds source		#压入单精度浮点数
+	fldl source		#压入双精度浮点数
+	filds source	#压入4个字节整数
+#1.2 获取浮点值
+/*
+	fst destination
+	i：整数
+	s：4个字节
+	l：8个字节
+	p：弹出
+*/
+	fst %st(4)	#st(4)获取栈顶值
+	fsts destination	#单精度浮点数获取栈顶
+	fstl destination	#双精度浮点数获取栈顶
+	fists destination	#4个字节整数获取栈顶
+	fstps	#弹出到4个字节
+	
+#2.浮点数运算
+/*
+	也是：
+		i：整数
+		p：弹出
+		r：－/从操作别人变成被别人操作
+		s：4个字节
+		l：8个字节
+*/
+	fadd source		#内存中的32/64位和栈顶相加存在栈顶
+	fadd %st(x), %st(0)		#st(x)+st(0)，结果存栈顶
+	fadd %st(0), %st(x)		#st(x)+st(0)，结果存st(x)
+	fadd %st(0), %st(x)		#st(x)+st(0)，结果存st(x)，弹出栈顶
+	faddp	#st(0)+st(1)，结果存st(1)，弹出栈顶
+	fiadd source	#整数
 ```
 
 
